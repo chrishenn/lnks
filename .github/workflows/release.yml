@@ -1,0 +1,45 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        filename: 'lnks.zip'
+        exclusions: '*.git* *.github* .gitignore readme.md'
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lnks.zip
+        path: ''
+        overwrite: 'true'
+  release:
+    name: release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lnks.zip
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: lnks.zip
+          tag_name: ${{ github.ref_name }}
+          body: "Automated release of ${{ github.ref_name }}."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
