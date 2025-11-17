@@ -1,4 +1,4 @@
-name: release
+name: Release
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  discussions: write
 
 jobs:
   build:
@@ -20,12 +21,12 @@ jobs:
       with:
         type: 'zip'
         filename: 'lnks.zip'
-        exclusions: '*.git* *.github* .gitignore readme.md mise.toml'
+        exclusions: '*.git* *.github* .gitignore .artifacts readme.md mise.toml'
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: lnks.zip
-        path: /
+        path: lnks.zip
         overwrite: 'true'
   release:
     name: release
@@ -36,11 +37,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lnks.zip
+          path: zips
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: lnks.zip
-          tag_name: ${{ github.ref_name }}
-          body: "Automated release of ${{ github.ref_name }}."
+          files: zips/lnks.zip
+          tag_name: ${{ github.event.ref }}
+          body: "Automated release of ${{ github.event.ref }}."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
