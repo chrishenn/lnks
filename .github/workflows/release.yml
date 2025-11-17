@@ -1,6 +1,7 @@
-name: Create release
+name: release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*"
@@ -19,12 +20,12 @@ jobs:
       with:
         type: 'zip'
         filename: 'lnks.zip'
-        exclusions: '*.git* *.github* .gitignore readme.md'
+        exclusions: '*.git* *.github* .gitignore readme.md mise.toml'
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: lnks.zip
-        path: ''
+        path: /
         overwrite: 'true'
   release:
     name: release
