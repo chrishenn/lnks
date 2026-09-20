@@ -20,8 +20,8 @@ jobs:
     - name: Archive Release
       uses: thedoctor0/zip-release@b57d897cb5d60cb78b51a507f63fa184cfe35554 # 0.7.6
       with:
-        type: 'zip'
-        filename: 'lnks.zip'
+        type: zip
+        filename: lnks.zip
         exclusions: '*.git* *.github* .gitignore .artifacts readme.md mise.toml'
     - name: Upload Artifact
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
